@@ -1,0 +1,217 @@
+[1mdiff --git a/Ans_Classification.docx b/Ans_Classification.docx[m
+[1mdeleted file mode 100644[m
+[1mindex 25c8ecd..0000000[m
+[1m--- a/Ans_Classification.docx[m
+[1m+++ /dev/null[m
+[36m@@ -1,189 +0,0 @@[m
+[31m-                               Jupyter Notebook [m
+[31m-[m
+[31m-Classification model based on Loan status, keeping amount duration and payments[m
+[31m-[m
+[31m-Independent variables[m
+[31m- loan_amount[m
+[31m- duration[m
+[31m- payments[m
+[31m-Dependent variables[m
+[31m- status[m
+[31m-[m
+[31m-Install MySQL Connector [m
+[31m-[m
+[31m-pip install mysql-connector-python[m
+[31m-[m
+[31m-[m
+[31m-[m
+[31m-Important Libraries [m
+[31m-import pandas as pd[m
+[31m-from sklearn.neighbors import KNeighborsClassifier[m
+[31m-from sklearn.metrics import accuracy_score[m
+[31m-import matplotlib.pyplot as plt[m
+[31m-import numpy as np[m
+[31m-from matplotlib.pylab import rcParams[m
+[31m-rcParams['figure.figsize'] = 20, 10[m
+[31m-[m
+[31m-Create SQL [m
+[31m-[m
+[31m-sql= "select * from acc_ord_card_disp_client_dist aocdcd join loan_trans lt on lt.account_id= aocdcd.account_id" [m
+[31m-[m
+[31m-Create Connection and Read Data as data Frame[m
+[31m-import mysql.connector as connection[m
+[31m-try:[m
+[31m-    mydb = connection.connect(host="localhost", database = 'capstone_prj',user="root", passwd="Bangalore",use_pure=True)[m
+[31m-    df = pd.read_sql(sql,mydb)[m
+[31m-    mydb.close() #close the connection[m
+[31m-except Exception as e:[m
+[31m-    mydb.close()[m
+[31m-    print(str(e))[m
+[31m-[m
+[31m-Display Data [m
+[31m-display (df)[m
+[31m-Display Shape [m
+[31m-display (df.shape)[m
+[31m-[m
+[31m-Display all columns [m
+[31m-df.columns[m
+[31m-[m
+[31m-Display Null values [m
+[31m-print (df.isnull().sum())  [m
+[31m-[m
+[31m-Display Unique values [m
+[31m-display (df.status.unique())[m
+[31m-[m
+[31m-Number of records in each category  [m
+[31m-display (df.status.value_counts())[m
+[31m-[m
+[31m-Label Encoding [m
+[31m-df.status=pd.DataFrame(df.status.map({'A':0,'B':1,'C':2,'D':3}),[m
+[31m-columns=['status'])[m
+[31m-display (df.status)[m
+[31m-[m
+[31m-Display Unique Values [m
+[31m-display (df.status.value_counts())[m
+[31m-[m
+[31m-Create x  -  independent variable[m
+[31m-x=df[['loan_amount','duration','payments']].values[m
+[31m-display(x)[m
+[31m-Create Y  - Dependent variable [m
+[31m-y=df['status'].values[m
+[31m-display (y)[m
+[31m-[m
+[31m-Min Max Scaler [m
+[31m-from sklearn.preprocessing import MinMaxScaler[m
+[31m-sc_x= MinMaxScaler()[m
+[31m-x = sc_x.fit_transform(x)[m
+[31m-print (x)[m
+[31m-[m
+[31m-Train Test Split [m
+[31m-from sklearn.model_selection import train_test_split[m
+[31m-x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=0.3,random_state=143)[m
+[31m-display (x_train.shape)[m
+[31m-display (x_test.shape)[m
+[31m-display (y_train.shape)[m
+[31m-display (y_test.shape)[m
+[31m-[m
+[31m-Identify the best K Values [m
+[31m-accuracy=[][m
+[31m-for i in range(1,15):[m
+[31m-    knn=KNeighborsClassifier(n_neighbors=i)[m
+[31m-    knn=knn.fit(x_train,y_train)[m
+[31m-    y_pred =knn.predict(x_train)[m
+[31m-    acc= accuracy_score (y_train,y_pred)[m
+[31m-    accuracy.append (acc)[m
+[31m-Display the accuracy [m
+[31m-display (accuracy)[m
+[31m-[m
+[31m-Plot the Graph [m
+[31m-plt.plot(range(1,15),accuracy)[m
+[31m-plt.show()[m
+[31m-[m
+[31m-Create KNN with N Neighbors = 3  [m
+[31m-[m
+[31m-knn=KNeighborsClassifier(n_neighbors=3)[m
+[31m-knn=knn.fit(x_train,y_train)[m
+[31m-[m
+[31m-Prediction and check Accuracy[m
+[31m-[m
+[31m-y_pred = knn.predict (x_test)[m
+[31m-display (accuracy_score(y_pred , y_test))[m
+[31m-[m
+[31m-[m
+[31m-Create KNN with N Neighbors = 10[m
+[31m-[m
+[31m-knn=KNeighborsClassifier(n_neighbors=10)[m
+[31m-knn=knn.fit(x_train,y_train)[m
+[31m-y_pred = knn.predict (x_test)[m
+[31m-display (accuracy_score(y_pred , y_test))[m
+[31m-[m
+[31m-[m
+[31m-Classification Report [m
+[31m-from sklearn.metrics import classification_report[m
+[31m-print(classification_report (y_test,y_pred))[m
+[31m-[m
+[31m-Confusion Matrix [m
+[31m-from sklearn.metrics import confusion_matrix [m
+[31m-cm = confusion_matrix (y_test,y_pred)[m
+[31m-print (cm)	[m
+[31m-Decision Tree with Criterion = Entropy [m
+[31m-[m
+[31m-from sklearn.tree import DecisionTreeClassifier[m
+[31m-TREE = DecisionTreeClassifier (criterion = 'entropy')[m
+[31m-TREE.fit(x_train,y_train)[m
+[31m-TREE_pred = TREE.predict(x_test)[m
+[31m-print (TREE_pred)[m
+[31m-print (pd.DataFrame(TREE_pred).groupby(0).agg({0:np.size}))[m
+[31m-print('\n Accuracy Score')[m
+[31m-print (accuracy_score (y_test,TREE_pred))[m
+[31m-print('\nClassification Report')[m
+[31m-print(classification_report (y_test,TREE_pred))[m
+[31m-print('Confusion Matrix')[m
+[31m-print (confusion_matrix (y_test,TREE_pred))[m
+[31m-[m
+[31m-[m
+[31m-[m
+[31m-[m
+[31m-Decision Tree with Criterion = Gini[m
+[31m-from sklearn.tree import DecisionTreeClassifier[m
+[31m-TREE = DecisionTreeClassifier (criterion = 'gini')[m
+[31m-TREE.fit(x_train,y_train)[m
+[31m-TREE_pred = TREE.predict(x_test)[m
+[31m-print (TREE_pred)[m
+[31m-print (pd.DataFrame(TREE_pred).groupby(0).agg({0:np.size}))[m
+[31m-print('\n Accuracy Score')[m
+[31m-print (accuracy_score (y_test,TREE_pred))[m
+[31m-print('\nClassification Report')[m
+[31m-print(classification_report (y_test,TREE_pred))[m
+[31m-print('Confusion Matrix')[m
+[31m-print (confusion_matrix (y_test,TREE_pred))[m
+[31m-[m
+[31m-Random Forest [m
+[31m-[m
+[31m-from sklearn.ensemble import RandomForestClassifier[m
+[31m-RF = RandomForestClassifier(n_estimators=50, criterion='entropy')[m
+[31m-RF.fit(x_train,y_train)[m
+[31m-RF_pred = RF.predict(x_test)[m
+[31m-print (RF_pred)[m
+[31m-print (pd.DataFrame(RF_pred).groupby(0).agg({0:np.size}))[m
+[31m-print('\n Accuracy Score')[m
+[31m-print (accuracy_score (y_test,RF_pred))[m
+[31m-print('\nClassification Report')[m
+[31m-print(classification_report (y_test,RF_pred))[m
+[31m-print('Confusion Matrix')[m
+[31m-print (confusion_matrix (y_test,RF_pred))[m
+[31m-[m
+[31m-Logistic Regression [m
+[31m-[m
+[31m-from sklearn.linear_model import LogisticRegression[m
+[31m-logmodel = LogisticRegression()[m
+[31m-logmodel.fit(x_train, y_train)[m
+[31m-log_pred = logmodel.predict(x_test)[m
+[31m-print (log_pred)[m
+[31m-print (pd.DataFrame(log_pred).groupby(0).agg({0: np.size}))[m
+[31m-print('\n Accuracy Score')[m
+[31m-print (accuracy_score (y_test,log_pred))[m
+[31m-print('\nClassification Report')[m
+[31m-print(classification_report (y_test,log_pred))[m
+[31m-print('Confusion Matrix')[m
+[31m-print (confusion_matrix (y_test,log_pred))[m
+[1mdiff --git a/Ans_Classification.html b/Ans_Classification.html[m
+[1mdeleted file mode 100644[m
+[1mindex 99b75a6..0000000[m
+[1m--- a/Ans_Classification.html[m
+[1m+++ /dev/null[m
+[36m@@ -1,9215 +0,0 @@[m
+[31m-<!DOCTYPE html>[m
+[31m-[m
+[31m-<html lang="en">[m
+[31m-<head><meta charset="utf-8"/>[m
+[31m-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>[m
+[31m-<title>Ans_Classification</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>[m
+[31m-<style type="text/css">[m
+[31m-    pre { line-height: 125%; }[m
+[31m-td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }[m
+[31m-span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }[m
+[31m-td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }[m
+[31m-span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }[m
+[31m-.highlight .hll { background-color: var(--jp-cell-editor-active-background) }[m
+[31m-.highlight { background: var(--jp-cell-editor-background); color: var(--jp-mirror-editor-variable-color) }[m
+[31m-.highlight .c { color: var(--jp-mirror-editor-comment-color); font-style: italic } /* Comment */[m
+[31
